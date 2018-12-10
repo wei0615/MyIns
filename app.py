@@ -11,7 +11,6 @@ define('port', default='8000', help='Listening port', type=int)
 class MainHandler(tornado.web.Application):
     pass
 
-
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
