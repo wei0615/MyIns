@@ -2,9 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ static_url('css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ static_url('font-awesome-4.7.0/css/font-awesome.css') }}">
+    <link rel="stylesheet" href="{{ static_url('css/style.css') }}">
+    <link rel="stylesheet" href="{{ static_url('css/comment.css') }}">
+
     <title>{% block title %}Tornado Title{% end %}</title>
 </head>
 <body>
-{% block content %}Default body of base{% end %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#"><i class="fa fa-camera"></i>Tu图说</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/explore">发现</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          用户中心
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="">个人信息</a>
+          <a class="dropdown-item" href="/profile">收藏</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="/logout">{{ current_user }}登出</a>
+      </li>
+    </ul>
+      <a class="btn btn-info" href="/upload"><i class="fa fa-upload"></i>上传图片</a>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
+    </form>
+  </div>
+</nav>
+<div class="container">
+    {% block content %}Default body of base{% end %}
+</div>
+
+
 </body>
+<!-- jQuery文件 -->
+<script src="{{ static_url('js/jquery-3.3.1.slim.min.js') }}"></script>
+<!-- Popper文件 -->
+<script src="{{ static_url('js/popper.min.js') }}"></script>
+<!-- Bootstrap 核心 JavaScript 文件 -->
+<script src="{{ static_url('js/bootstrap.js') }}"></script>
+
+{% block extra-script %}{% end %}
 </html>
