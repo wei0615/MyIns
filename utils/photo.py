@@ -7,6 +7,7 @@ class ImageSave(object):
     """
     辅助保存用户图片信息，生成缩略图
     """
+    userimg_dir = 'user_img'
     upload_dir = 'upload'
     thumb_dir = 'thumbs'
     size = (200,200)
@@ -33,8 +34,17 @@ class ImageSave(object):
         return os.path.join(self.static_path,self.upload_url)
 
     def save_upload(self,content):
+        print("图片地址%s" %self.upload_path)
         with open(self.upload_path,'wb') as f:
             f.write(content)
+
+    def save_userimg(self,content):
+        userimg_url = os.path.join(self.userimg_dir,self.new_name)
+        userimg_path = os.path.join(self.static_path,userimg_url)
+
+        with open(userimg_path,'wb') as f:
+            f.write(content)
+        return userimg_url
 
     @property
     def thumb_url(self):

@@ -38,6 +38,7 @@ var updater = {
 
     start: function() {
         var url = "ws://" + location.host + "/ws";
+        console.log(url);
         updater.socket = new WebSocket(url);  // 初始化 WebSocket
         updater.socket.onmessage = function(event) {  // 获取到服务器的信息时响应
             updater.showMessage(JSON.parse(event.data));

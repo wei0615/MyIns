@@ -1,35 +1,8 @@
-{% extends 'base.html' %}
+/**
+ * Created by Administrator on 2016/12/14.
+ */
 
-{% block title %}profile page{% end %}
-
-{% block content %}
-<div class="card">
-    <div class="card-header"><h4>用户上传</h4></div>
-        <div class="row">
-        {% for i in user.imgs %}
-            <div class="col-6 col-sm-3">
-                <a href="/post/{{ i.id }}"><img src="{{ static_url(i.thumb_url) }}" class="img-thumbnail"/></a><br>
-                <button class="btn delete-btn" data-img-id="{{ i.id }}">删除</button>
-            </div>
-        {% end %}
-        </div>
-</div>
-<div class="card">
-    <div class="card-header"><h4>用户喜欢</h4></div>
-        <div class="row">
-        {% for i in like_imgs %}
-            <div class="col-6 col-sm-3">
-                <a href="/post/{{ i.id }}"><img src="{{ static_url(i.thumb_url) }}" class="img-thumbnail"/></a>
-            </div>
-        {% end %}
-        </div>
-</div>
-{% end %}
-
-{% block extra-script %}
-
-    <script type="text/javascript">
-        var tushuoalert = {
+var xfzalert = {
     /*
         功能：提示错误
         参数：
@@ -67,7 +40,7 @@
             'type': 'success'
         };
         swal(args,confirmCallback);
-    },
+    }, 
     /*
         功能：带有标题的成功提示
         参数：
@@ -196,33 +169,3 @@
         swal.close();
     }
 };
-
-        $(function () {
-            var deleteBtns = $(".delete-btn");
-            deleteBtns.click(function () {
-                var img_id = $(this).attr('data-img-id');
-                tushuoalert.alertConfirm({
-                    'text': '您确定要删除这张图片？',
-                    'confirmCallback': function () {
-                    $.ajax({
-                        'url': '/delimg',
-                        'data': {
-                            'img_id': img_id
-                        },
-                        type:'get',
-                        'success': function () {
-                            {#if(result['code'] === 302){#}
-                                {#window.location.reload();#}
-                                {#console.log(pk);#}
-                            {#    window.location.href='http://39.108.160.235:8888/profile';#}
-                            {##}
-                            {#    }#}
-                            window.location.reload();
-                            }
-                        });
-                    }
-                })
-            })
-        })
-    </script>
-{% end %}

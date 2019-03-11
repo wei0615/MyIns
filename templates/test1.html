@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>ajax点击加载更多数据--博客园--勇淘未来</title>
+        <script type="text/javascript" src="{{ static_url('js/jquery-1.12.0.min.js') }}"></script>
+        <style>
+            *{padding:0;margin:0;}
+            .box {margin: 100px auto;width: 550px;}
+            ul li {width:550px;list-style: none;}
+            ul li span{text-align:center;display:block;}
+            .clear {clear: both;}
+            .load {text-align: center;display: none;margin-top:50px;color:#ccc;}
+            .end{display:none;color:#ccc;}
+        </style>
+    </head>
+    <body>
+        <div class="box">
+            <ul></ul>
+            <div class="clear"></div>
+            <div class="load">加载中...</div>
+            <div class="more" style="text-align: center;margin-top:50px;">
+                <button class="btn">查看更多图片</button>
+                <div class="end">没有更多了</div>
+            </div>
+        </div>
+        <script>
+            var num = 0;
+            var start = 0;
+            var size = 2;
+            $.ajax({
+                url: "dataNews.json",
+                type: "get",
+                success: function(res){
+                    var str = "";
+                    for(var i = 0;i < 2;i++){
+                        str += "<li><img src=" + res[i].img + "><span>"+ res[i].title +"</span></li>";
+                    }
+                    $(".box ul").append(str);
+                },
+                error:function(){
+                    console.log(errors);
+                }
+            })
+            $(".btn").click(function(){
+                $(".load").show();
+                setTimeout(function(){
+                    $(".load").hide();
+                    num++;
+                    console.log(num);
+                    start = num * size;
+                    $.ajax({
+                        url:"dataNews.json",
+                        type:"get",
+                        success:function(res){
+                            var sum = res.length;
+                            if(start + size > sum) {
+                                size = sum - start;
+                                $(".btn").css("display","none");
+                                $(".end").css("display","block");
+                            }
+                            var str = "";
+                            for(var i = start;i<(start + size);i++) {
+                                str += "<li><img src=" + res[i].img + "><span>"+ res[i].title +"</span></li>";
+                            }
+                            console.log(start + size);
+                            $("ul").append(str);
+                        }
+                    });
+                },300)
+            }
+        )
+        </script>
+</body>
+</html>

@@ -3,24 +3,24 @@
 {% block title %}ChatRoom page{% end %}
 
 {% block content %}
-    room
+<div class="row">
+    <div class="commentAll">
     <div id="body">
         <div id="inbox">
             {% for message in messages %}
                 {% raw message['html']%}
             {% end %}
         </div>
+        <br>
         <div id="input">
             <form action="#" method="post" id="messageform">
-                <table>
-                    <tr>
-                        <td><input name="body" id="message" style="width: 500px"></td>
-                        <td><input type="submit" value="发送"></td>
-                    </tr>
-                </table>
+                <input class="content comment-input" placeholder="your message" name="body" id="message">
+                <button class="suBtn">发送</button>
             </form>
         </div>
+        </div>
     </div>
+</div>
 {% end %}
 
 {% block extra-script %}

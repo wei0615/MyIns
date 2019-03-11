@@ -16,6 +16,8 @@ class AuthBaseHandler(tornado.web.RequestHandler,SessionMixin):
     def on_finish(self):
         self.db_session.close()
 
+
+
 class IndexHandler(AuthBaseHandler):
     """
     Home page for user, photo feeds of follow.
@@ -25,11 +27,32 @@ class IndexHandler(AuthBaseHandler):
         imgs = self.orm.get_img_from()
         like_counts = []
         for img in imgs:
-            like= count_likes(img)
+            like= self.orm.count_likes(img)
             like_counts.append(like)
 
         self.render('index.html',imgs=imgs,like_counts=like_counts)
 
+
+class PersonHandler(AuthBaseHandler):
+    @tornado.web.authenticated
+    def get(self,*args,**kwargs):
+        user = self.orm.get_user()
+        self.render('personcenter.html',user=user)
+
+    def post(self, *args, **kwargs):
+        username = self.get_argument('username', '')
+        nickname = self.get_argument('nickname', '')
+        user_imgs = self.request.files.get('user_img',None)
+
+        if username and nickname and user_imgs:
+            if user_imgs:
+                for user_img in user_imgs:
+                    img_save = ImageSave(self.settings['static_path'],user_img['filename'])
+                    user_img_url = img_save.save_userimg(user_img['body'])
+
+                    if self.current_user == username:
+                        self.orm.change_userinfo(username,nickname,user_img_url)
+                    self.redirect('/person')
 
 class ExploreHandler(AuthBaseHandler):
     """
@@ -41,22 +64,47 @@ class ExploreHandler(AuthBaseHandler):
         self.render('explore.html',imgs=imgs)
 
 
-class  PostHandler(AuthBaseHandler):
+class PostHandler(AuthBaseHandler):
     """
     Single photo page, and maybe comments.
     """
     def get(self, post_id):
+        likes_user_id = []
         img = self.orm.get_img_by(post_id)
         all_comments = self.orm.get_comment_by(post_id)
+        likes = self.db_session.query(Like).filter_by(likeimg_id=post_id).all()
+
+        for like in likes:
+            user = self.db_session.query(User).filter_by(id=like.user_id).first()
+            likes_user_id.append(user.username)
+
         if img:
             like_count = self.orm.count_likes(img)
-            self.render('post.html', img=img,like_count=like_count,all_comments=all_comments)
+            self.render('post.html', img=img,like_count=like_count,all_comments=all_comments,likes_user_id=likes_user_id)
         else:
             self.write("Don't have this picture!")
 
-    def post(self, *args, **kwargs):
 
-        pass
+class CommentHandler(AuthBaseHandler):
+    """
+    评论功能
+    """
+    def post(self,post_id):
+        comments = self.get_argument('comment','')
+        if comments:
+            self.orm.save_comments(post_id,comments)
+            self.redirect('/post/%s' %post_id)
+        else:
+            self.redirect('/post/%s' % post_id)
+
+class DelCommentHandler(AuthBaseHandler):
+    """
+    删除评论
+    """
+    def get(self):
+        comment_id = self.get_argument("comment_id",None)
+        # post_id = self.db_session.query(Comment).filter_by(id=comment_id).first()
+        self.orm.del_comments(comment_id)
 
 class UploadHandler(AuthBaseHandler):
     '''
@@ -69,14 +117,15 @@ class UploadHandler(AuthBaseHandler):
     @tornado.web.authenticated
     def post(self,*args,**kwargs):
         img_files = self.request.files.get("newimg",None)
+        describe =  self.get_argument('describe',None)
         img_id = 0
-        if img_files:
+        if img_files and describe:
             for img in img_files:
                 img_save = ImageSave(self.settings['static_path'],img['filename'])
                 img_save.save_upload(img['body'])
                 img_save.make_thumb()
 
-                upload_img = self.orm.add_img(img_save.upload_url,img_save.thumb_url)
+                upload_img = self.orm.add_img(img_save.upload_url,img_save.thumb_url,describe)
                 img_id = upload_img.id
             self.redirect('/post/%s' %img_id)
         else:
@@ -94,3 +143,26 @@ class ProfileHandler(AuthBaseHandler):
         user = self.orm.get_user()
         like_imgs = self.orm.get_like_imgs(user)
         self.render('profile.html',user=user,like_imgs=like_imgs)
+
+class DelImgHandler(AuthBaseHandler):
+    """
+    删除用户上传图片
+    """
+    def get(self):
+        img_id = self.get_argument('img_id',None)
+        if img_id:
+            self.orm.delete_img_from(img_id)
+            # self.redirect('/profile')
+
+
+class CollectionHandler(AuthBaseHandler):
+    """
+    收藏和取消喜欢的图片
+    """
+    def get(self):
+        collect_id = self.get_argument("collect_id",None)
+        self.orm.collect_img(collect_id)
+
+    def post(self):
+        collect_id = self.get_argument("collect_id",None)
+        self.orm.cancel_clc_img(collect_id)

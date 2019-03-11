@@ -4,8 +4,6 @@ import tornado.web
 from tornado.options import define, options
 from handlers import main,auth,chat,service
 
-
-
 define('port', default='8000', help='Listening port', type=int)
 
 class MainHandler(tornado.web.Application):
@@ -16,15 +14,22 @@ class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
             ('/', main.IndexHandler),
+            ('/person', main.PersonHandler),
             ('/explore', main.ExploreHandler),
             ('/post/(?P<post_id>[0-9]+)', main.PostHandler),
             ('/upload', main.UploadHandler),
             ('/profile', main.ProfileHandler),
+            ('/delimg', main.DelImgHandler),
+            # ('/delcomment/(?P<comment_id>[0-9]+)', main.DelCommentHandler),
+            ('/delcomment', main.DelCommentHandler),
+            ('/comment/(?P<post_id>[0-9]+)', main.CommentHandler),
+            ('/climg', main.CollectionHandler),
             ('/login',auth.LoginHandler),
             ('/signup',auth.SignupHandler),
             ('/logout',auth.LogoutHandler),
             ('/room',chat.RoomHandler),
             ('/ws',chat.ChatSocketHandler),
+
 
             #同步与异步测试url https://source.unsplash.com/random
             ('/sync',service.SyncUrlHandler),

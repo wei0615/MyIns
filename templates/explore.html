@@ -3,8 +3,13 @@
 {% block title %}explore page{% end %}
 
 {% block content %}
+<div class="row">
     {% for i in imgs %}
-        <img src="{{ static_url(i.thumb_url) }}" width="200px" />
-        upload by {{ i.user.username }}
+        <div class="commentAll">
+            <a href="/post/{{ i.id }}"><img src="{{ static_url(i.thumb_url) }}" width="200px" /></a>
+            upload by {{ i.user.username }}<br>
+            {{ i.upload_time }}
+        </div>
     {% end %}
+</div>
 {% end %}

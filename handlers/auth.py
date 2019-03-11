@@ -24,10 +24,6 @@ class LoginHandler(AuthBaseHandler):
         else:
             self.redirect('/login')
 
-class LogoutHandler(AuthBaseHandler):
-    def get(self,*args,**kwargs):
-        self.session.delete('tudo_user_info')
-        self.redirect('/login')
 
 class SignupHandler(AuthBaseHandler):
     def get(self,*args,**kwargs):
@@ -51,3 +47,8 @@ class SignupHandler(AuthBaseHandler):
                 self.write({'msg':'两次输入密码不匹配'})
         else:
             self.render('signup.html',msg={'register fail'})
+
+class LogoutHandler(AuthBaseHandler):
+    def get(self,*args,**kwargs):
+        self.session.delete('tudo_user_info')
+        self.redirect('/login')

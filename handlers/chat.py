@@ -65,10 +65,10 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler,SessionMixin):
     def on_message(self, message):
         print("got message:%s" %message)
         paresd = tornado.escape.json_decode(message)
-        if paresd['body'] and paresd['body'].startswith('http://'):
+        if paresd['body'] and paresd['body'].startswith('http://') or paresd['body'].startswith('https://'):
             url = paresd['body']
             client = tornado.httpclient.AsyncHTTPClient()
-            save_api_url = 'http://192.168.253.128:8000/aync?url={}&user={}&from=room'.format(url,self.current_user)
+            save_api_url = 'http://39.108.160.235:8000/aync?url={}&user={}&from=room'.format(url,self.current_user)
             IOLoop.current().spawn_callback(client.fetch,save_api_url)
 
             chat = make_chat("user {},url({}) is processing".format(self.current_user,url))

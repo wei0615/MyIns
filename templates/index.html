@@ -5,15 +5,33 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col col-md-8">
+{#        <div class="col col-md-8">#}
         {% for i in imgs %}
-            <div>
-                <a href="/post/{{ i.id }}"><img src="{{ static_url(i.image_url) }}" class="img-fluid"  width="300px" height="400px" /></a>
-                <p>{{ i.user.nickname }}  <i class="fa fa-heart text-danger"></i>&nbsp;&nbsp;&nbsp;{{ i.upload_time }}</p>
+            <div id="grid">
+                <div class="item">
+                        <a href="/post/{{ i.id }}"><img src="{{ static_url(i.image_url) }}" class="img-fluid"  width="300px" height="300px" /></a>
+                        <p>{{ i.user.nickname }}  <i class="fa fa-heart text-danger"></i>&nbsp;&nbsp;&nbsp;{{ i.upload_time }}</p>
+                </div>
             </div>
         {% end %}
-        </div>
-            <div class="d-none d-sm-none d-md-block col-md-4">图片说明文字</div>
-        </div>
+{#        </div>#}
+{#        <div class="d-none d-sm-none d-md-block col-md-4">#}
+{#            图片说明文字#}
+{#        </div>#}
+    </div>
 </div>
+{% end %}
+
+{% block extra-script %}
+
+<script type="text/javascript">
+
+{##}
+{#    function myrefresh(){#}
+{#        window.location.reload();#}
+{#    }#}
+{#    setTimeout('myrefresh()',5000); //指定1秒刷新一次#}
+
+
+</script>
 {% end %}

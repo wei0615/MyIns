@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    个人中心
+{% end %}
+
+{% block content %}
+    <div class="container">
+        <div class="content">
+            <div class="main">
+                <!--基础信息-->
+                <div class="BasicInformation">
+                    <div class="title">
+                        <h1>个人信息</h1>
+                    </div>
+                </div><br>
+                <div class="content clearfix">
+                        <form action="/person" name="form0" id="form0" method="post" enctype="multipart/form-data">
+                            <div>
+                                <label for="title-form">用户名</label>
+                                <input type="text" name="username" id="title-form" class="form-control" readonly value="{{ user.username }}">
+                            </div>
+                            <div>
+                                <label for="title-form">昵称</label>
+                                <input type="text" name="nickname"  class="form-control" value="{{ user.nickname }}">
+                            </div>
+                            <div>
+                                <label for="title-form">图像</label><br>
+
+                                <img class="round_icon" src="{{ static_url("{}".format(user.user_img)) }}" style="width: 100px;height: 100px;"><br>
+                                <input type="file" name="user_img" id="file0" multiple="multiple" /><br>
+                                <img src="/static/images/defoult.png" id="img0" style="width: 15rem;height: 10rem;"><br>
+                            </div>
+                            <button class="suBtn">保存</button>
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end %}
+
+{% block extra-script %}
+<style type="text/css">
+        .round_icon{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            overflow: hidden;
+            }
+</style>
+
+<script>
+$("#file0").change(function(){
+		 var objUrl = getObjectURL(this.files[0]) ;//获取文件信息
+		 console.log("objUrl = "+objUrl);
+		  if (objUrl) {
+		  $("#img0").attr("src", objUrl);
+		 }
+}) ;
+function getObjectURL(file) {
+		 var url = null;
+		 if (window.createObjectURL!=undefined) {
+		  url = window.createObjectURL(file) ;
+		 } else if (window.URL!=undefined) { // mozilla(firefox)
+		  url = window.URL.createObjectURL(file) ;
+		 } else if (window.webkitURL!=undefined) { // webkit or chrome
+		  url = window.webkitURL.createObjectURL(file) ;
+		 }
+		 return url ;
+		}
+</script>
+{% end %}

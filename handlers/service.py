@@ -32,7 +32,7 @@ class AsynUrlHandler(AuthBaseHandler):
         is_from_room = self.get_argument('from','') == 'room'
         if user and is_from_room:
             img = add_img(user, img_saver.upload_url, img_saver.thumb_url)
-            chat = make_chat("{} post:http://192.168.253.128:8000/post/{}".format(user,img.id), img_saver.thumb_url)
+            chat = make_chat("{} post:http://39.108.160.235:8000/post/{}".format(user,img.id), img_saver.thumb_url)
             chat['html'] = tornado.escape.to_basestring(
                 self.render_string('message.html', message=chat)
             )
@@ -67,6 +67,6 @@ class SyncUrlHandler(AuthBaseHandler):
         img_saver = ImageSave(self.settings['static_path'],'x.jpg')
         img_saver.save_upload(resp.content)
         img_saver.make_thumb()
-        img = add_img(self.current_user,img_saver.upload_url,img_saver.thumb_url)
+        img = self.orm.add_img(self.current_user,img_saver.upload_url,img_saver.thumb_url)
 
         self.redirect('/post/{}'.format(img.id))

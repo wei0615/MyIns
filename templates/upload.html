@@ -3,8 +3,40 @@
 {% block title %}post page{% end %}
 
 {% block content %}
+
+<div class="row">
+
+<div class="commentAll">
     <form action="/upload" enctype="multipart/form-data" method="post">
-        <input type="file" name="newimg">
-        <input type="submit">
+        <input type="file" name="newimg" id="file0" multiple="multiple" /><br><br>
+        <img src="/static/images/defoult.png" id="img0" style="width: 15rem;height: 10rem;"><br><br>
+        <textarea class="content comment-input" placeholder="寄语···" name="describe"></textarea>
+        <button class="suBtn">发布</button>
     </form>
+</div>
+</div>
 {% end %}
+
+{% block extra-script %}
+    <script type="text/javascript">
+            $("#file0").change(function(){
+		 var objUrl = getObjectURL(this.files[0]) ;//获取文件信息
+		 console.log("objUrl = "+objUrl);
+		  if (objUrl) {
+		  $("#img0").attr("src", objUrl);
+		 }
+        }) ;
+    function getObjectURL(file) {
+		 var url = null;
+		 if (window.createObjectURL!=undefined) {
+		  url = window.createObjectURL(file) ;
+		 } else if (window.URL!=undefined) { // mozilla(firefox)
+		  url = window.URL.createObjectURL(file) ;
+		 } else if (window.webkitURL!=undefined) { // webkit or chrome
+		  url = window.webkitURL.createObjectURL(file) ;
+		 }
+		 return url ;
+		}
+    </script>
+{% end %}
+

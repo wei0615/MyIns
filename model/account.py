@@ -2,7 +2,6 @@ from datetime import datetime
 from sqlalchemy import (Column,Integer,String,DateTime,ForeignKey)
 from sqlalchemy.sql import exists
 from sqlalchemy.orm import relationship
-# from handlers.main import AuthBaseHandler
 
 from .db import Base,DBSession
 
@@ -15,6 +14,7 @@ class User(Base):
     username = Column(String(50),unique=True,nullable=False)
     nickname = Column(String(50),nullable=False)
     password = Column(String(50),nullable=False)
+    user_img = Column(String(80))
     create_time = Column(DateTime,default=datetime.now())
 
     def __repr__(self):
@@ -48,9 +48,10 @@ class Img(Base):
     image_url = Column(String(80))
     thumb_url = Column(String(80))
 
-    user_id = Column(Integer,ForeignKey('users.id'))
-    user = relationship('User',backref='imgs',uselist=False,cascade='all')
-    upload_time = Column(DateTime,default=datetime.now())
+    describe = Column(String(200))
+    user_id = Column(Integer,ForeignKey('users.id'),nullable=False)
+    user = relationship('User',backref='imgs',uselist=False)
+    upload_time = Column(DateTime,default=datetime.now)
 
     def __repr__(self):
         return '<Img(#{})>'.format(self.id)
@@ -65,8 +66,8 @@ class Comment(Base):
     img_id = Column(Integer,ForeignKey('imgs.id'),nullable=False)
     user_id = Column(Integer,ForeignKey('users.id'),nullable=False)
     comments = Column(String(200))
-    user = relationship('User', backref='comments', uselist=False, cascade='all')
-    create_time = Column(DateTime,default=datetime.now())
+    user = relationship('User', backref='comments', uselist=False)
+    create_time = Column(DateTime,default=datetime.now)
 
 
 
